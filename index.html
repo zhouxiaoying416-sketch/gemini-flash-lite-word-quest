@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语单词闯关 · WORD QUEST</title>
+    <meta name="description" content="十道英语语境练习，包含即时解析、错题重练和计分。无需联网。">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+    <!-- Generated through Crazyrouter API with gemini-2.5-flash-lite; locally reviewed and corrected. -->
+    <style>
+        :root {
+            --bg-color: #F7F6F2;
+            --card-bg: #FFFFFF;
+            --text-main: #1C3027;
+            --text-muted: #556B61;
+            --primary: #1C3027;
+            --primary-hover: #2E4E3F;
+            --accent-green: #3B7A57;
+            --accent-orange: #D97736;
+            --border-color: #D3DCD5;
+            --focus-ring: #D97736;
+            --correct-bg: #E8F3EE;
+            --correct-border: #3B7A57;
+            --wrong-bg: #FDF3ED;
+            --wrong-border: #D97736;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(28, 48, 39, 0.04);
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 装饰性SVG形状 */
+        .decor-shape {
+            position: absolute;
+            top: 0;
+            right: 0;
+            pointer-events: none;
+            opacity: 0.1;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+
+        .brand {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--accent-orange);
+            text-transform: uppercase;
+        }
+
+        .stats-display {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .btn:focus-visible, button:focus-visible {
+            outline: 3px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+
+        .btn:disabled {
+            background-color: var(--border-color);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--border-color);
+            margin-left: 12px;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: rgba(28, 48, 39, 0.05);
+        }
+
+        /* 隐藏不可访问元素 */
+        .view[aria-hidden="true"] {
+            display: none !important;
+        }
+
+        /* 视图通用 */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 首页样式 */
+        .home-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .feature-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .feature-card strong {
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 4px;
+            font-size: 16px;
+        }
+
+        /* 游戏页样式 */
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 3px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-green);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .sentence-box {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .english-sentence {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .translation {
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 16px;
+            color: var(--text-main);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background-color: rgba(59, 122, 87, 0.02);
+        }
+
+        .option-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 12px;
+            color: var(--text-muted);
+        }
+
+        .option-text {
+            flex-grow: 1;
+        }
+
+        /* 选项状态样式 */
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: var(--accent-green);
+        }
+        .option-btn.correct .option-tag {
+            background-color: var(--correct-border);
+            color: #FFF;
+            border-color: var(--correct-border);
+        }
+
+        .option-btn.wrong {
+            background-color: var(--wrong-bg);
+            border-color: var(--wrong-border);
+            color: var(--accent-orange);
+        }
+        .option-btn.wrong .option-tag {
+            background-color: var(--wrong-border);
+            color: #FFF;
+            border-color: var(--wrong-border);
+        }
+
+        .feedback-panel {
+            background-color: var(--bg-color);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        .feedback-panel.show {
+            display: block;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        .feedback-panel.is-correct {
+            border-left-color: var(--accent-green);
+        }
+
+        .feedback-panel.is-wrong {
+            border-left-color: var(--accent-orange);
+        }
+
+        .feedback-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+
+        .feedback-text {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* 结果页样式 */
+        .results-summary {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .score-big {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .results-details {
+            margin-bottom: 24px;
+        }
+
+        .result-item {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .result-item-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .result-item.item-correct {
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .result-item.item-wrong {
+            border-left: 4px solid var(--accent-orange);
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* 屏幕阅读器专用 */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        .review-explanation { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-color); font-size: 14px; color: var(--text-muted); }
+        .container { margin: 24px 0; }
+        .view { position: relative; }
+        h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.3; margin-bottom: 16px; letter-spacing: -0.5px; }
+        .btn { min-height: 48px; }
+        .option-tag { flex-shrink: 0; }
+        .english-sentence, .review-explanation { overflow-wrap: anywhere; }
+        .btn-secondary { margin-left: 0; }
+        .sentence-box { background: linear-gradient(135deg, #f3f6ef, #f7f6f2); }
+        .results-details { max-height: 52vh; overflow-y: auto; padding-right: 4px; }
+        @media (max-width: 480px) {
+            body { padding: 12px; align-items: flex-start; }
+            .container { padding: 20px 16px; margin: 8px 0; }
+            .home-features { grid-template-columns: 1fr; gap: 10px; }
+            .sentence-box { padding: 18px 16px; }
+            .english-sentence { font-size: 20px; letter-spacing: 0; }
+            .question-meta { gap: 8px; flex-wrap: wrap; }
+            .action-bar .btn { width: 100%; }
+            .result-item-header { gap: 8px; flex-wrap: wrap; }
+            .results-summary { padding: 20px 12px; }
+            .results-details { max-height: none; overflow-y: visible; }
+        }
+    </style>
+</head>
+<body>
+    <noscript>请在浏览器中允许JavaScript后打开小游戏。游戏无需联网。</noscript>
+
+    <div class="container">
+        <!-- 装饰背景图形 -->
+        <svg class="decor-shape" width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="150" cy="50" r="100" fill="#3B7A57"/>
+            <circle cx="180" cy="100" r="60" fill="#D97736"/>
+        </svg>
+
+        <header>
+            <div class="brand">WORD QUEST</div>
+            <div class="stats-display" id="globalStats">单轮 10 题</div>
+        </header>
+
+        <!-- 首页视图 -->
+        <div id="homeView" class="view active">
+            <h1>每天十题，把单词用起来</h1>
+            <p>把单词放进句子里，边答边看中文解析。</p>
+
+            <div class="home-features">
+                <div class="feature-card">
+                    <strong>10 道精选题目</strong>
+                    包含完整语境和即时解析
+                </div>
+                <div class="feature-card">
+                    <strong>100 分满分挑战</strong>
+                    每题 10 分，即时查看正误反馈
+                </div>
+                <div class="feature-card">
+                    <strong>沉浸无干扰</strong>
+                    不设倒计时，支持键盘与触屏
+                </div>
+            </div>
+
+            <button class="btn" id="startBtn" type="button">开始闯关</button>
+        </div>
+
+        <!-- 游戏页视图 -->
+        <div id="gameView" class="view" aria-hidden="true">
+            <div class="progress-bar-container" role="progressbar" aria-label="本轮答题进度" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <div class="question-meta">
+                <span id="questionCounter">第 1 / 10 题</span>
+                <span id="currentScoreDisplay">当前得分: 0 分</span>
+            </div>
+
+            <div class="sentence-box">
+                <div class="english-sentence" id="sentenceText" tabindex="-1" role="heading" aria-level="2">May I ____ your pen?</div>
+                <div class="translation" id="translationText">我可以借用你的钢笔吗？下课后会还给你。</div>
+            </div>
+
+            <div class="options-grid" role="group" aria-label="选项列表" id="optionsContainer">
+                <!-- 选项由 JS 动态生成 -->
+            </div>
+
+            <div class="feedback-panel" id="feedbackPanel" aria-live="polite">
+                <div class="feedback-title" id="feedbackTitle">回答正确</div>
+                <div class="feedback-text" id="feedbackText">解析文本...</div>
+            </div>
+
+            <button class="btn" id="nextBtn" type="button" disabled>下一题</button>
+        </div>
+
+        <!-- 结果页视图 -->
+        <div id="resultView" class="view" aria-hidden="true">
+            <h1>闯关结果</h1>
+            <p>来看看你本轮的表现吧！</p>
+
+            <div class="results-summary">
+                <div class="score-big" id="finalScore">0分</div>
+                <div id="finalStats" style="color: var(--text-muted); font-size: 15px;">正确 0 / 总题数 10</div>
+                <div id="encouragementText" style="margin-top: 12px; font-weight: 600; color: var(--accent-green);">继续加油！</div>
+            </div>
+
+            <div class="results-details" id="resultsDetailsContainer">
+                <!-- 详细答题列表由JS生成 -->
+            </div>
+
+            <div class="action-bar">
+                <button class="btn" id="restartBtn" type="button">重新挑战</button>
+                <button class="btn btn-secondary" id="retryWrongBtn" type="button">只练错题</button>
+            </div>
+        </div>
+
+        <!-- 辅助无障碍实时播报 -->
+        <div class="sr-only" id="srAnnouncer" aria-live="assertive"></div>
+    </div>
+
+    <script>
+        // 核心题库，语义与解释严格保留
+        const ALL_QUESTIONS = [
+            {
+                id: 'borrow',
+                sentence: 'May I ____ your pen? I will give it back after class.',
+                translation: '我可以借用你的钢笔吗？下课后会还给你。',
+                options: ['borrow', 'lend', 'arrive', 'remember'],
+                answer: 'borrow',
+                explanation: 'borrow表示“借入”。说话人从对方那里借来钢笔，所以用borrow；lend表示“借出”。'
+            },
+            {
+                id: 'lend',
+                sentence: 'Could you ____ me your umbrella? Mine is broken.',
+                translation: '你能把雨伞借给我吗？我的坏了。',
+                options: ['lend', 'borrow', 'choose', 'arrive'],
+                answer: 'lend',
+                explanation: 'lend someone something表示“把某物借给某人”。这里请对方把雨伞借出给我，因此用lend。'
+            },
+            {
+                id: 'arrive',
+                sentence: 'We will ____ at the station at six.',
+                translation: '我们将在六点到达车站。',
+                options: ['arrive', 'leave', 'borrow', 'improve'],
+                answer: 'arrive',
+                explanation: 'arrive at表示“到达”车站等具体地点。leave表示离开，不能与这里的at the station组成对应结构。'
+            },
+            {
+                id: 'leave',
+                sentence: 'Please ____ your muddy shoes outside the door.',
+                translation: '请把沾满泥的鞋子留在门外。',
+                options: ['leave', 'arrive', 'lend', 'remember'],
+                answer: 'leave',
+                explanation: 'leave在这里表示“把某物留在某处”。leave your shoes outside就是把鞋留在外面。'
+            },
+            {
+                id: 'quiet',
+                sentence: 'Please be ____; the baby is sleeping.',
+                translation: '宝宝正在睡觉，请保持安静。',
+                options: ['quiet', 'quick', 'enough', 'choose'],
+                answer: 'quiet',
+                explanation: 'quiet是形容词，意思是“安静的”，与宝宝正在睡觉的情境相符。'
+            },
+            {
+                id: 'quick',
+                sentence: 'That was a ____ reply — you answered in one second!',
+                translation: '这个回复真快——你一秒钟就回答了！',
+                options: ['quick', 'quiet', 'enough', 'improve'],
+                answer: 'quick',
+                explanation: 'quick表示“快的”，这里修饰reply，强调回复速度很快。'
+            },
+            {
+                id: 'enough',
+                sentence: 'There are five seats for four people, so we have ____ seats.',
+                translation: '四个人有五个座位，所以座位是够的。',
+                options: ['enough', 'quiet', 'arrive', 'remember'],
+                answer: 'enough',
+                explanation: 'enough表示“足够的”，放在名词seats前。五个座位可以满足四个人的需要。'
+            },
+            {
+                id: 'choose',
+                sentence: 'You can ____ either tea or coffee.',
+                translation: '你可以在茶和咖啡之间做选择。',
+                options: ['choose', 'arrive', 'quiet', 'enough'],
+                answer: 'choose',
+                explanation: 'choose表示“选择”。can后使用动词原形，either tea or coffee给出了两个选项。'
+            },
+            {
+                id: 'improve',
+                sentence: 'Daily practice can ____ your English.',
+                translation: '每天练习可以提高你的英语水平。',
+                options: ['improve', 'arrive', 'quiet', 'enough'],
+                answer: 'improve',
+                explanation: 'improve表示“改善、提高”。improve your English就是提高英语水平。'
+            },
+            {
+                id: 'remember',
+                sentence: 'Please ____ to turn off the lights before you go.',
+                translation: '离开之前，请记得关灯。',
+                options: ['remember', 'arrive', 'enough', 'quiet'],
+                answer: 'remember',
+                explanation: 'remember to do something表示“记得去做某事”。这里提醒对方离开前关灯。'
+            }
+        ];
+
+        // 状态管理
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let userAnswers = []; // 存储用户的答题记录
+        let isWrongMode = false;
+        let lastWrongQuestions = [];
+        let isAnswerLocked = false;
+
+        // DOM 元素引用
+        const homeView = document.getElementById('homeView');
+        const gameView = document.getElementById('gameView');
+        const resultView = document.getElementById('resultView');
+        const startBtn = document.getElementById('startBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const retryWrongBtn = document.getElementById('retryWrongBtn');
+        const progressBar = document.getElementById('progressBar');
+        const questionCounter = document.getElementById('questionCounter');
+        const currentScoreDisplay = document.getElementById('currentScoreDisplay');
+        const sentenceText = document.getElementById('sentenceText');
+        const translationText = document.getElementById('translationText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const feedbackPanel = document.getElementById('feedbackPanel');
+        const feedbackTitle = document.getElementById('feedbackTitle');
+        const feedbackText = document.getElementById('feedbackText');
+        const finalScore = document.getElementById('finalScore');
+        const finalStats = document.getElementById('finalStats');
+        const encouragementText = document.getElementById('encouragementText');
+        const resultsDetailsContainer = document.getElementById('resultsDetailsContainer');
+        const globalStats = document.getElementById('globalStats');
+        const srAnnouncer = document.getElementById('srAnnouncer');
+
+        // 洗牌算法（随机排列）
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // 视图切换控制
+        function switchView(viewName) {
+            [homeView, gameView, resultView].forEach(v => {
+                v.classList.remove('active');
+                v.setAttribute('aria-hidden', 'true');
+            });
+            const target = document.getElementById(viewName);
+            if (target) {
+                target.classList.add('active');
+                target.removeAttribute('aria-hidden');
+            }
+        }
+
+        // 开始全部挑战
+        function startNewGame(wrongOnly = false) {
+            if (gameView.classList.contains('active')) return;
+            if (wrongOnly && lastWrongQuestions.length === 0) return;
+            isWrongMode = wrongOnly;
+            if (isWrongMode) {
+                currentQuestions = shuffleArray(lastWrongQuestions);
+            } else {
+                currentQuestions = shuffleArray(ALL_QUESTIONS);
+            }
+            
+            currentIndex = 0;
+            score = 0;
+            userAnswers = [];
+            isAnswerLocked = false;
+
+            globalStats.textContent = `单轮 ${currentQuestions.length} 题`;
+            switchView('gameView');
+            loadQuestion();
+        }
+
+        // 加载当前题目
+        function loadQuestion() {
+            isAnswerLocked = false;
+            feedbackPanel.className = 'feedback-panel';
+            nextBtn.disabled = true;
+
+            const q = currentQuestions[currentIndex];
+            const total = currentQuestions.length;
+            nextBtn.textContent = currentIndex === total - 1 ? '查看成绩' : '下一题';
+            srAnnouncer.textContent = '';
+            const progress = progressBar.parentElement;
+            progress.setAttribute('aria-valuemax', total);
+            progress.setAttribute('aria-valuenow', currentIndex);
+
+            // 更新进度与元数据
+            progressBar.style.width = `${((currentIndex) / total) * 100}%`;
+            questionCounter.textContent = `第 ${currentIndex + 1} / ${total} 题`;
+            currentScoreDisplay.textContent = `当前得分: ${score} 分`;
+
+            // 渲染句子
+            sentenceText.textContent = q.sentence;
+            translationText.textContent = q.translation;
+
+            // 随机化选项排列但映射正确
+            const randomizedOptions = shuffleArray(q.options);
+            optionsContainer.innerHTML = '';
+
+            const tags = ['A', 'B', 'C', 'D'];
+            randomizedOptions.forEach((opt, index) => {
+                const tag = tags[index];
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'option-btn';
+                btn.setAttribute('data-option', opt);
+                btn.setAttribute('data-index', index + 1);
+
+                btn.innerHTML = `
+                    <span class="option-tag">${tag}</span>
+                    <span class="option-text">${escapeHTML(opt)}</span>
+                `;
+
+                btn.addEventListener('click', () => handleSelectOption(opt, btn, q));
+                optionsContainer.appendChild(btn);
+            });
+
+            sentenceText.focus();
+        }
+
+        // 处理用户选择选项
+        function handleSelectOption(selectedOpt, selectedBtn, q) {
+            if (!gameView.classList.contains('active') || isAnswerLocked || q !== currentQuestions[currentIndex]) return;
+            isAnswerLocked = true;
+
+            const isCorrect = selectedOpt === q.answer;
+            const optionButtons = optionsContainer.querySelectorAll('.option-btn');
+
+            // 锁定所有选项并显示对错
+            optionButtons.forEach(btn => {
+                btn.disabled = true;
+                const optValue = btn.getAttribute('data-option');
+                if (optValue === q.answer) {
+                    btn.classList.add('correct');
+                } else if (btn === selectedBtn && !isCorrect) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (isCorrect) {
+                score += 10;
+                feedbackTitle.textContent = `回答正确 · ${q.answer}`;
+                feedbackPanel.className = 'feedback-panel show is-correct';
+                srAnnouncer.textContent = '回答正确';
+            } else {
+                feedbackTitle.textContent = `还差一点 · 正确答案：${q.answer}`;
+                feedbackPanel.className = 'feedback-panel show is-wrong';
+                srAnnouncer.textContent = `回答错误。正确答案是 ${q.answer}`;
+            }
+
+            feedbackText.textContent = q.explanation;
+            progressBar.style.width = ((currentIndex + 1) / currentQuestions.length * 100) + '%';
+            progressBar.parentElement.setAttribute('aria-valuenow', currentIndex + 1);
+            currentScoreDisplay.textContent = `当前得分: ${score} 分`;
+
+            // 记录用户作答
+            userAnswers.push({
+                question: q,
+                selected: selectedOpt,
+                isCorrect: isCorrect
+            });
+
+            nextBtn.disabled = false;
+            nextBtn.focus();
+        }
+
+        // 下一题处理
+        function handleNextQuestion() {
+            if (!gameView.classList.contains('active') || !isAnswerLocked || nextBtn.disabled) return;
+            nextBtn.disabled = true;
+            currentIndex++;
+            if (currentIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // 展示结果页
+        function showResults() {
+            switchView('resultView');
+            progressBar.style.width = `100%`;
+
+            const totalQ = currentQuestions.length;
+            const correctCount = userAnswers.filter(a => a.isCorrect).length;
+            const maxScorePossible = totalQ * 10;
+
+            finalScore.textContent = `${score}分`;
+            finalStats.textContent = `正确 ${correctCount} / 总题数 ${totalQ}（满分 ${maxScorePossible} 分）`;
+
+            if (score === maxScorePossible) {
+                encouragementText.textContent = `本轮没有错题！${totalQ}题全部答对，继续保持。`;
+                retryWrongBtn.style.display = 'none'; // 全对隐藏“只练错题”
+            } else {
+                encouragementText.textContent = '再接再厉，把错题攻克就更完美了！';
+                retryWrongBtn.style.display = 'inline-flex';
+            }
+
+            // 收集上一轮错题供重练使用
+            lastWrongQuestions = userAnswers
+                .filter(a => !a.isCorrect)
+                .map(a => a.question);
+
+            // 渲染错题详情卡片
+            resultsDetailsContainer.innerHTML = '';
+            userAnswers.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = `result-item ${item.isCorrect ? 'item-correct' : 'item-wrong'}`;
+                
+                div.innerHTML = `
+                    <div class="result-item-header">
+                        <span>第 ${index + 1} 题: ${escapeHTML(item.question.id)}</span>
+                        <span>${item.isCorrect ? '+10分 (正确)' : '0分 (错误)'}</span>
+                    </div>
+                    <div style="font-size: 14px; margin-bottom: 4px;"><strong>句子：</strong>${escapeHTML(item.question.sentence)}</div>
+                    <div style="font-size: 14px; color: var(--text-muted);">
+                        你的选择: <strong style="color: ${item.isCorrect ? 'var(--accent-green)' : 'var(--accent-orange)'};">${escapeHTML(item.selected)}</strong> 
+                        | 正确答案: <strong>${escapeHTML(item.question.answer)}</strong>
+                    </div>
+                    <div class="review-explanation">解析：${escapeHTML(item.question.explanation)}</div>
+                `;
+                resultsDetailsContainer.appendChild(div);
+            });
+
+            restartBtn.focus();
+        }
+
+        // 简单的防XSS转义
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // 事件监听绑定
+        startBtn.addEventListener('click', () => startNewGame(false));
+        nextBtn.addEventListener('click', () => handleNextQuestion());
+        restartBtn.addEventListener('click', () => startNewGame(false));
+        retryWrongBtn.addEventListener('click', () => startNewGame(true));
+
+        // 键盘全局交互支持（数字键 1-4 和 Enter）
+        document.addEventListener('keydown', (e) => {
+            if (!gameView.classList.contains('active') || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+
+            // 数字键 1-4 选择选项
+            if (['1', '2', '3', '4'].includes(e.key) && !isAnswerLocked) {
+                e.preventDefault();
+                const index = parseInt(e.key, 10) - 1;
+                const buttons = optionsContainer.querySelectorAll('.option-btn');
+                if (buttons[index]) {
+                    buttons[index].click();
+                }
+            }
+
+            // Enter and Space use native button behavior to avoid double activation.
+        });
+    </script>
+</body>
+</html>
